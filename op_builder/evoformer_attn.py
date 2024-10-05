@@ -40,8 +40,8 @@ class EvoformerAttnBuilder(CUDAOpBuilder):
             major = torch.cuda.get_device_properties(0).major  #ignore-cuda
             minor = torch.cuda.get_device_properties(0).minor  #ignore-cuda
         except RuntimeError:
-            major = torch.cuda.get_device_capability(0)[0]  #ignore-cuda
-            minor = torch.cuda.get_device_capability(0)[1]  #ignore-cuda
+            major = 9  #ignore-cuda
+            minor = 0  #ignore-cuda
         args.append(f"-DGPU_ARCH={major}{minor}")
         return args
 

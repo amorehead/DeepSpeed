@@ -36,8 +36,12 @@ class EvoformerAttnBuilder(CUDAOpBuilder):
         except ImportError:
             self.warning("Please install torch if trying to pre-compile kernels")
             return args
-        major = torch.cuda.get_device_properties(0).major  #ignore-cuda
-        minor = torch.cuda.get_device_properties(0).minor  #ignore-cuda
+        try:
+            major = torch.cuda.get_device_properties(0).major  #ignore-cuda
+            minor = torch.cuda.get_device_properties(0).minor  #ignore-cuda
+        except RuntimeError:
+            major = torch.cuda.get_device_capability(0)[0]  #ignore-cuda
+            minor = torch.cuda.get_device_capability(0)[1]  #ignore-cuda
         args.append(f"-DGPU_ARCH={major}{minor}")
         return args
 

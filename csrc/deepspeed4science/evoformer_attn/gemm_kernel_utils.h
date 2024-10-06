@@ -236,7 +236,7 @@ struct call_conditional<false, TA, TB> {
 
 CUTLASS_DEVICE int32_t warp_uniform(int32_t value)
 {
-    return (int32_t)__shfl_sync(0xffffffff, (unsigned)value, 0);
+    return (int32_t)__shfl(0xffffffff, (unsigned)value, 0);
 }
 
 template <typename T>

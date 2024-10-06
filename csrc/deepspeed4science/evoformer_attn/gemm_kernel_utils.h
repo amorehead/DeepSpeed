@@ -36,6 +36,9 @@
 
 #pragma once
 
+#define HIP_ENABLE_WARP_SYNC_BUILTINS 1
+# include <hip/hip_runtime_api.h>
+
 #include <type_traits>
 #include "cutlass/arch/mma.h"
 

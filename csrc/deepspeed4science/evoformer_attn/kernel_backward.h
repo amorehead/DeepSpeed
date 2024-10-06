@@ -40,7 +40,7 @@
 #include <type_traits>
 #include <vector>
 
-#include <cuda_fp16.h>
+#include <hip/hip_fp16.h>
 
 #include "cutlass/cutlass.h"
 #include "cutlass/epilogue/thread/linear_combination.h"

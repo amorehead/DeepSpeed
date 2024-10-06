@@ -93,5 +93,5 @@ class EvoformerAttnBuilder(CUDAOpBuilder):
         return super().is_compatible(verbose) and cuda_okay
 
     def include_paths(self):
-        includes = [f'{self.cutlass_path}/include', f'{self.cutlass_path}/tools/util/include']
+        includes = ['/usr/local/cuda/include', f'{self.cutlass_path}/include', f'{self.cutlass_path}/tools/util/include']
         return includes

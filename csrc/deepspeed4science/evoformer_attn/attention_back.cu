@@ -3,7 +3,7 @@
 
 // DeepSpeed Team
 
-#include <ATen/cuda/CUDAContext.h>
+#include <ATen/hip/HIPContext.h>
 #include <torch/extension.h>
 #include <type_traits>
 #include "gemm_kernel_utils.h"
@@ -159,7 +159,7 @@ typename std::enable_if<CheckArch<arch, scalar_t>::value>::type attention_back_i
 
     auto kernel_fn = attention_kernel_backward_batched_impl<Kernel>;
     size_t smem_bytes = sizeof(typename Kernel::SharedStorage);
-    cudaFuncSetAttribute(kernel_fn, cudaFuncAttributeMaxDynamicSharedMemorySize, int(smem_bytes));
+    hipFuncSetAttribute(kernel_fn, hipFuncAttributeMaxDynamicSharedMemorySize, int(smem_bytes));
     if (!Kernel::check_supported(p)) { throw std::runtime_error("Unsupported parameters"); }
     kernel_fn<<<p.getBlocksGrid(), p.getThreadsGrid(), smem_bytes>>>(p);
 }
@@ -212,7 +212,7 @@ void attention_back_impl(torch::Tensor& go,
                          torch::Tensor& gb1,
                          torch::Tensor& gb2)
 {
-    cudaDeviceProp* prop = at::cuda::getCurrentDeviceProperties();
+    hipDeviceProp* prop = at::hip::getCurrentDeviceProperties();
     DISPATCH_ARCHTAG(prop->major * 10 + prop->minor,
                      DISPATCH_TYPES(q, { CODE(scalar_t, torch_scalar_t); }));
 }

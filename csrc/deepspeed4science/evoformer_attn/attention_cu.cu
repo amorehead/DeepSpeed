@@ -3,7 +3,7 @@
 
 // DeepSpeed Team
 
-#include <ATen/cuda/CUDAContext.h>
+#include <ATen/hip/HIPContext.h>
 #include <torch/extension.h>
 #include "gemm_kernel_utils.h"
 #include "kernel_forward.h"
@@ -112,7 +112,7 @@ typename std::enable_if<CheckArch<arch, scalar_t>::value>::type attention_impl_t
     constexpr auto kernel_fn = attention_kernel_batched_impl<Attention>;
     int smem_bytes = sizeof(typename Attention::SharedStorage);
     if (smem_bytes > 0xc000) {
-        cudaFuncSetAttribute(kernel_fn, cudaFuncAttributeMaxDynamicSharedMemorySize, smem_bytes);
+        hipFuncSetAttribute(kernel_fn, hipFuncAttributeMaxDynamicSharedMemorySize, smem_bytes);
     }
     if (!Attention::check_supported(p)) { throw std::runtime_error("Parameters not supported"); }
     kernel_fn<<<p.getBlocksGrid(), p.getThreadsGrid(), smem_bytes>>>(p);
@@ -154,7 +154,7 @@ void attention_impl(torch::Tensor& q,
                     torch::Tensor& lse)
 {
     auto lse_ptr = lse.size(0) == 0 ? nullptr : reinterpret_cast<float*>(lse.data_ptr<float>());
-    cudaDeviceProp* prop = at::cuda::getCurrentDeviceProperties();
+    hipDeviceProp* prop = at::hip::getCurrentDeviceProperties();
     DISPATCH_ARCHTAG(prop->major * 10 + prop->minor,
                      DISPATCH_TYPES(q, { CODE(scalar_t, torch_scalar_t); }));
 }

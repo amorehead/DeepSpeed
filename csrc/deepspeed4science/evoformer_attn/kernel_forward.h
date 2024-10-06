@@ -36,7 +36,7 @@
 
 #pragma once
 
-#include <curand_kernel.h>
+#include <hiprand/hiprand_kernel.h>
 #include <cmath>
 #include <vector>
 

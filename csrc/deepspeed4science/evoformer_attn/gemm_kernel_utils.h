@@ -36,8 +36,8 @@
 
 #pragma once
 
-#define HIP_ENABLE_WARP_SYNC_BUILTINS 1
-# include <hip/hip_runtime_api.h>
+#define HIP_ENABLE_WARP_SYNC_BUILTINS
+# include <hip/hip_runtime.h>
 
 #include <type_traits>
 #include "cutlass/arch/mma.h"
@@ -236,7 +236,7 @@ struct call_conditional<false, TA, TB> {
 
 CUTLASS_DEVICE int32_t warp_uniform(int32_t value)
 {
-    return (int32_t)__shfl(0xffffffff, (unsigned)value, 0);
+    return (int32_t)__shfl_sync(0xffffffff, (unsigned)value, 0);
 }
 
 template <typename T>

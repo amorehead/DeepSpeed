@@ -234,9 +234,9 @@ struct call_conditional<false, TA, TB> {
 // The cheapest way to do it is just to broadcast it from lane 0
 ////////////////////////////////////////////////////////////////////////////////
 
-CUTLASS_DEVICE int32_t warp_uniform(int32_t value)
+CUTLASS_DEVICE unsigned int warp_uniform(int32_t value)
 {
-    return (int32_t)__shfl(0xffffffff, value, 0);
+    return (unsigned int)__shfl((unsigned int) value, 0);
 }
 
 template <typename T>

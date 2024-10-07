@@ -37,7 +37,7 @@
 #pragma once
 
 #define HIP_ENABLE_WARP_SYNC_BUILTINS
-# include <hip/hip_runtime.h>
+#include <hip/amd_detail/amd_warp_sync_functions.h>
 
 #include <type_traits>
 #include "cutlass/arch/mma.h"
@@ -234,9 +234,9 @@ struct call_conditional<false, TA, TB> {
 // The cheapest way to do it is just to broadcast it from lane 0
 ////////////////////////////////////////////////////////////////////////////////
 
-CUTLASS_DEVICE unsigned int warp_uniform(int32_t value)
+CUTLASS_DEVICE int32_t warp_uniform(int32_t value)
 {
-    return (unsigned int)__shfl((unsigned int) value, 0);
+    return (int32_t)__shfl_sync(0xffffffff, (unsigned)value, 0);
 }
 
 template <typename T>

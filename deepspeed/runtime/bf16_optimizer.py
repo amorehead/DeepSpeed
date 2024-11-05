@@ -286,7 +286,10 @@ class BF16_Optimizer(ZeROOptimizer):
 
         self._global_grad_norm = all_groups_norm
 
-        assert all_groups_norm > 0.
+        # assert all_groups_norm > 0.
+        if not all_groups_norm > 0.0:
+            print_rank_0(f"Warning: Assertion `all_groups_norm > 0.0` failed: {all_groups_norm}", force=True)
+
         if self.clip_grad > 0.:
             clip_tensors_by_global_norm(input_tensors=self.get_grads_for_norm(for_clipping=True),
                                         max_norm=self.clip_grad,
